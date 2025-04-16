@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Autores{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Autores</h1>
+    <a href="{% url 'author_create' %}" class="btn btn-primary">Añadir Autor</a>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form class="d-flex" method="get">
+            <input class="form-control me-2" type="search" placeholder="Buscar autores..." name="q" value="{{ request.GET.q }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+</div>
+
+{% if author_list %}
+    <div class="row">
+        {% for author in author_list %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if author.profile.photo %}
+                        <img src="{{ author.profile.photo.url }}" class="card-img-top" alt="{{ author.name }}">
+                    {% else %}
+                        <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span>Sin foto</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ author.name }}</h5>
+                        <p class="card-text">
+                            {% if author.birth_date %}
+                                <strong>Nacimiento:</strong> {{ author.birth_date|date:"d/m/Y" }}<br>
+                            {% endif %}
+                            {% if author.death_date %}
+                                <strong>Fallecimiento:</strong> {{ author.death_date|date:"d/m/Y" }}<br>
+                            {% endif %}
+                            <strong>Estado:</strong> 
+                            {% if author.is_alive %}
+                                <span class="badge bg-success">Vivo</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Fallecido</span>
+                            {% endif %}
+                        </p>
+                        <p>
+                            <strong>Libros:</strong> {{ author.books.count }}
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'author_detail' author.id %}" class="btn btn-info">Ver</a>
+                            <div>
+                                <a href="{% url 'author_update' author.id %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'author_delete' author.id %}" class="btn btn-danger">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Primera</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Anterior</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Siguiente</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Última &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">
+        No hay autores disponibles.
+    </div>
+{% endif %}
+
+{% endblock %}

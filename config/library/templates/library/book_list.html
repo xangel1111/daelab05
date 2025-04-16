@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Libros{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Libros</h1>
+    <a href="{% url 'book_create' %}" class="btn btn-primary">Añadir Libro</a>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form class="d-flex" method="get">
+            <input class="form-control me-2" type="search" placeholder="Buscar libros..." name="q" value="{{ request.GET.q }}">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+</div>
+
+{% if book_list %}
+    <div class="row">
+        {% for book in book_list %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% else %}
+                        <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span>Sin portada</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        {% if book.subtitle %}
+                            <h6 class="card-subtitle mb-2 text-muted">{{ book.subtitle }}</h6>
+                        {% endif %}
+                        <p class="card-text">
+                            <strong>Autor:</strong> {{ book.author.name }}<br>
+                            <strong>ISBN:</strong> {{ book.isbn }}<br>
+                            <strong>Publicación:</strong> {{ book.publication_date|date:"d/m/Y"|default:"Desconocida" }}
+                        </p>
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'book_detail' book.slug %}" class="btn btn-info">Ver</a>
+                            <div>
+                                <a href="{% url 'book_update' book.slug %}" class="btn btn-warning">Editar</a>
+                                <a href="{% url 'book_delete' book.slug %}" class="btn btn-danger">Eliminar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo; Primera</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Anterior</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Siguiente</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Última &raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">
+        No hay libros disponibles.
+    </div>
+{% endif %}
+
+{% endblock %}

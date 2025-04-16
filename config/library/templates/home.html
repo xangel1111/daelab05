@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Sistema de Gestión de Biblioteca{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card shadow-lg border-0 mb-5">
+            <div class="card-body p-5">
+                <h1 class="display-4 text-center mb-4">Bienvenido al Sistema de Gestión de Biblioteca</h1>
+                
+                <p class="lead text-center mb-5">Administra fácilmente tu colección de libros, autores, categorías y editoriales.</p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="h5 mb-3">Libros</h3>
+                                <p class="mb-4">Gestiona tu colección completa de libros</p>
+                                <a href="{% url 'book_list' %}" class="btn btn-primary">Ver libros</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="h5 mb-3">Autores</h3>
+                                <p class="mb-4">Administra información de autores</p>
+                                <a href="{% url 'author_list' %}" class="btn btn-primary">Ver autores</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="h5 mb-3">Categorías</h3>
+                                <p class="mb-4">Organiza libros por categorías</p>
+                                <a href="{% url 'category_list' %}" class="btn btn-primary">Ver categorías</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <h3 class="h5 mb-3">Editoriales</h3>
+                                <p class="mb-4">Gestiona las editoriales</p>
+                                <a href="{% url 'publisher_list' %}" class="btn btn-primary">Ver editoriales</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <h2 class="h3 mb-4">Búsqueda rápida</h2>
+                <form action="#" method="get" class="mb-0">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Buscar por título, autor o ISBN...">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

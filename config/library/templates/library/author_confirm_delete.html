@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Autor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h1>Eliminar Autor</h1>
+    </div>
+    <div class="card-body">
+        <p class="lead">¿Estás seguro de que deseas eliminar al autor "{{ author.name }}"?</p>
+        
+        {% if author.books.exists %}
+            <div class="alert alert-warning">
+                <strong>¡Atención!</strong> Este autor tiene {{ author.books.count }} libro(s) asociado(s). Si eliminas este autor, también eliminarás todos sus libros.
+            </div>
+            
+            <h5>Libros asociados:</h5>
+            <ul>
+                {% for book in author.books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        
+        <div class="alert alert-danger">
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer. Toda la información asociada a este autor se eliminará permanentemente.
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a href="{% url 'author_detail' author.id %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

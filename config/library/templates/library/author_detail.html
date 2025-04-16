@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ author.name }}{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="row g-0">
+        <div class="col-md-3">
+            {% if author.profile.photo %}
+                <img src="{{ author.profile.photo.url }}" class="img-fluid rounded-start" alt="{{ author.name }}">
+            {% else %}
+                <div class="bg-secondary text-white d-flex align-items-center justify-content-center h-100">
+                    <span>Sin foto</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-9">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h1 class="card-title">{{ author.name }}</h1>
+                    <div>
+                        <a href="{% url 'author_update' author.id %}" class="btn btn-warning">Editar</a>
+                        <a href="{% url 'author_delete' author.id %}" class="btn btn-danger">Eliminar</a>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>
+                            {% if author.birth_date %}
+                                <strong>Fecha de nacimiento:</strong> {{ author.birth_date|date:"d/m/Y" }}<br>
+                            {% endif %}
+                            {% if author.death_date %}
+                                <strong>Fecha de fallecimiento:</strong> {{ author.death_date|date:"d/m/Y" }}<br>
+                            {% endif %}
+                            <strong>Estado:</strong> 
+                            {% if author.is_alive %}
+                                <span class="badge bg-success">Vivo</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Fallecido</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        {% if author.profile.website %}
+                            <p><strong>Sitio web:</strong> <a href="{{ author.profile.website }}" target="_blank">{{ author.profile.website }}</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if author.profile.biography %}
+                    <h5>Biografía</h5>
+                    <p class="card-text">{{ author.profile.biography }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>Libros del autor</h3>
+{% if author.books.exists %}
+    <div class="row">
+        {% for book in author.books.all %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}" class="card-img-top" alt="{{ book.title }}">
+                    {% else %}
+                        <div class="card-img-top bg-secondary text-white d-flex align-items-center justify-content-center" style="height: 150px;">
+                            <span>Sin portada</span>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="

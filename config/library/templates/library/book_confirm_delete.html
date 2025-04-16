@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Libro{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h1>Eliminar Libro</h1>
+    </div>
+    <div class="card-body">
+        <p class="lead">¿Estás seguro de que deseas eliminar el libro "{{ book.title }}"?</p>
+        
+        <div class="alert alert-warning">
+            <strong>¡Atención!</strong> Esta acción no se puede deshacer. Toda la información asociada a este libro se eliminará permanentemente.
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+            <a href="{% url 'book_detail' book.slug %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

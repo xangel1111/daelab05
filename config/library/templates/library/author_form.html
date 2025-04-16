@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Autor{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1>{% if form.instance.pk %}Editar{% else %}Crear{% endif %} Autor</h1>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <h4>Información básica</h4>
+            <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">Nombre*</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.birth_date.id_for_label }}" class="form-label">Fecha de nacimiento</label>
+                    {{ form.birth_date }}
+                    {% if form.birth_date.errors %}
+                        <div class="text-danger">
+                            {% for error in form.birth_date.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.death_date.id_for_label }}" class="form-label">Fecha de fallecimiento</label>
+                    {{ form.death_date }}
+                    {% if form.death_date.errors %}
+                        <div class="text-danger">
+                            {% for error in form.death_date.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if profile_form %}
+            <hr>
+            <h4>Perfil del autor</h4>
+            
+            <div class="mb-3">
+                <label for="{{ profile_form.biography.id_for_label }}" class="form-label">Biografía</label>
+                {{ profile_form.biography }}
+                {% if profile_form.biography.errors %}
+                    <div class="text-danger">
+                        {% for error in profile_form.biography.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ profile_form.website.id_for_label }}" class="form-label">Sitio web</label>
+                {{ profile_form.website }}
+                {% if profile_form.website.errors %}
+                    <div class="text-danger">
+                        {% for error in profile_form.website.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                <label for="{{ profile_form.photo.id_for_label }}" class="form-label">Foto</label>
+                {{ profile_form.photo }}
+                {% if profile_form.instance.photo %}
+                    <div class="mt-2">
+                        <img src="{{ profile_form.instance.photo.url }}" alt="Foto actual" style="max-height: 150px" class="img-thumbnail">
+                        <p class="small">Foto actual. Sube una nueva imagen para cambiarla.</p>
+                    </div>
+                {% endif %}
+                {% if profile_form.photo.errors %}
+                    <div class="text-danger">
+                        {% for error in profile_form.photo.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a href="{% url 'author_list' %}" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Para los campos que requieran clases especiales, mejora de usabilidad, etc.
+    document.querySelectorAll('input, select, textarea').forEach(element => {
+        if (!element.classList.contains('form-control') && 
+            !element.classList.contains('form-select') && 
+            element.type !== 'file' &&
+            element.type !== 'checkbox') {
+            element.classList.add('form-control');
+        }
+        
+        if (element.type === 'file') {
+            element.classList.add('form-control');
+        }
+        
+        if (element.type === 'date') {
+            element.classList.add('form-control');
+        }
+        
+        if (element.tagName === 'TEXTAREA') {
+            element.rows = 5;
+        }
+    });
+});
+</script>
+{% endblock %}
